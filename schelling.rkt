@@ -110,6 +110,8 @@
 (define (render-state state)
   (define (points-with-col ags col)
     (points (map agent-posn ags)
+            #:sym 'fullcircle
+            #:alpha 0.6
             #:color col))
   (let-values ([(or gr)
                (partition
