@@ -1,6 +1,6 @@
 #lang racket
 ;; Simulate Schelling's segregation model
-;; as described on Sargent and Stachursky's site
+;; as described on Sargent and Stachurski's site
 ;; http://quant-econ.net/py/schelling.html
 
 ;; (c) Jyotirmoy Bhattacharya, http://www.jyotirmoy.net
@@ -11,39 +11,32 @@
 (define NAGENTS 250) ; No of agents of each type
 (define NNCNT 10)    ; Nearest neighbour to consider
 
-;; Each agent is a (color . position) pair
-;; with position a 2-element coordinate vector
+;; Positions are vectors of two reals
 ;; The following functions provide an abstract interface
 
-(define (mk-pos x y)
+(define (posn x y)
   (vector x y))
 
-(define (get-x pos)
+(define (posn-x pos)
   (vector-ref pos 0))
 
-(define (get-y pos)
+(define (posn-y pos)
   (vector-ref pos 1))
 
 ;; Pythagorean distance
 (define (pydist p1 p2)
   (sqrt
    (+
-    (expt (- (get-x p1) (get-x p2)) 2)
-    (expt (- (get-y p1) (get-y p2)) 2))))
+    (expt (- (posn-x p1) (posn-x p2)) 2)
+    (expt (- (posn-y p1) (posn-y p2)) 2))))
 
-(define (mk-ag col pos)
-  (cons col pos))
-
-(define (ag-color ag)
-  (car ag))
-
-(define (ag-pos ag)
-  (cdr ag))
+;; Agents have a color and a position
+(struct agent (color posn))
 
 ;; Create an agent of a specified
 ;; color at a random position on the unit square
-(define (mk-ran-ag col)
-  (mk-ag col (mk-pos (random) (random))))
+(define (random-agent col)
+  (agent col (posn (random) (random))))
 
 ;; Main function
 ;; Start with an initial random state and iterate
@@ -66,7 +59,7 @@
 (define (init-state)
   (for*/list ([col '(orange green)]
               [i (range 1 NAGENTS)])
-    (mk-ran-ag col)))
+    (random-agent col)))
 
 ;; One iteration
 ;; Returns (number of moves, new state)
@@ -84,14 +77,14 @@
 ;; Is the agent 'ag' happy in 'state'?
 (define (happy? ag state)
   (define neighs (nn ag state))
-  (define maxcnt (max-freq (map ag-color neighs)))
+  (define maxcnt (max-freq (map agent-color neighs)))
   (> maxcnt (/ NNCNT 2)))
 
 ;; Move an agent 'ag' to a new random position
 ;; Repeat if position is not a happy one give
 ;; 'state'
 (define (move ag state)
-  (define nag (mk-ran-ag (ag-color ag)))
+  (define nag (random-agent (agent-color ag)))
   (if (happy? nag state)
       nag
       (move ag state)))
@@ -100,7 +93,7 @@
 ;; the state 'state'
 (define (nn ag state)
   (define (dist ag2)
-    (pydist (ag-pos ag) (ag-pos ag2)))
+    (pydist (agent-posn ag) (agent-posn ag2)))
   (take
    (drop (sort state < #:key dist) 1)
    NNCNT))
@@ -116,11 +109,11 @@
 ;; a scatterplot representing a state
 (define (render-state state)
   (define (points-with-col ags col)
-    (points (map ag-pos ags)
+    (points (map agent-posn ags)
             #:color col))
   (let-values ([(or gr)
                (partition
-                (lambda (a) (eq? 'orange (ag-color a)))
+                (lambda (a) (eq? 'orange (agent-color a)))
                 state)])
     (list
      (points-with-col or "orange")
