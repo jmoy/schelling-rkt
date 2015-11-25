@@ -101,13 +101,6 @@
    (drop (sort state < #:key dist) 1)
    NNCNT))
 
-;; Given a sequence 'xs' returns the
-;; frequency of most common value
-(define (max-freq xs)
-  (define ht (make-hash))
-  (for ([x xs]) (hash-update! ht x add1 0))
-  (apply max (hash-values ht)))
-
 ;; Use the 'plot' library facilities to render
 ;; a scatterplot representing a state
 (define (render-state state)
