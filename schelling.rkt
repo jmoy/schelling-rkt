@@ -23,12 +23,11 @@
 (define (posn-y pos)
   (vector-ref pos 1))
 
-;; Pythagorean distance
+;; Pythagorean distance (squared)
 (define (pydist p1 p2)
-  (sqrt
-   (+
-    (expt (- (posn-x p1) (posn-x p2)) 2)
-    (expt (- (posn-y p1) (posn-y p2)) 2))))
+  (+
+   (sqr (- (posn-x p1) (posn-x p2)))
+   (sqr (- (posn-y p1) (posn-y p2)))))
 
 ;; Agents have a color and a position
 (struct agent (color posn))
