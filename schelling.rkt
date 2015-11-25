@@ -58,7 +58,7 @@
 ;; positioned agents
 (define (init-state)
   (for*/list ([col '(orange green)]
-              [i (range 1 NAGENTS)])
+              [_ (in-range 1 NAGENTS)])
     (random-agent col)))
 
 ;; One iteration
