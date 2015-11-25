@@ -48,9 +48,7 @@ The algorithm for moving is as follows
 
 In this way, we cycle continuously through the agents, moving as required
 
-We continue to cycle until no one wishes to move
+We continue to cycle until no one wishes to move.
 
-## Problem in Sargent-Stachurski implementation
 
-In the [implementation](https://github.com/QuantEcon/QuantEcon.py/blob/46ef25fbb8b28d7d8f5e345edc6208c899c24bfc/solutions/schelling_solutions.ipynb) currently (Nov. 2015) on Sargent-Stachurski, the
-model is not implemented as described above. Agents have a preference not for homogeneity but for beign close to others of their own color. Once the model as described above is implemented the fast convergence found by S.-S. seems to disapper.
+

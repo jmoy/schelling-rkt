@@ -42,12 +42,12 @@
 ;; Start with an initial random state and iterate
 ;; as per the model. For each iteration print
 ;; the number of agents who move.
-;; Stop and display the configuration if the number
-;; of agents who move is less than 1/100 of NAGENTS
+;; Stop and display the configuration if we reach
+;; a configuration from which there are no moves.
 (define (main)
   (define (go s)
     (let-values ([(m ns) (next-state s)])
-      (if (<= m (/ NAGENTS 100))
+      (if (zero? m)
           (plot (render-state s))
           (begin
             (displayln m)
@@ -77,8 +77,11 @@
 ;; Is the agent 'ag' happy in 'state'?
 (define (happy? ag state)
   (define neighs (nn ag state))
-  (define maxcnt (max-freq (map agent-color neighs)))
-  (> maxcnt (/ NNCNT 2)))
+  (define nsimilar
+    (count
+     (λ (a) (eq? (agent-color a) (agent-color ag)))
+     neighs))
+  (> nsimilar (/ NNCNT 2)))
 
 ;; Move an agent 'ag' to a new random position
 ;; Repeat if position is not a happy one give
