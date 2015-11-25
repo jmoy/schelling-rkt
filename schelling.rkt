@@ -111,18 +111,15 @@
 ;; Use the 'plot' library facilities to render
 ;; a scatterplot representing a state
 (define (render-state state)
-  (define (points-with-col ags col)
-    (points (map agent-posn ags)
+  (define (cmap ty)
+    (case ty
+      [(orange) "orange"]
+      [(green) "green"]))
+  (for/list ([ag state])
+    (points (list (agent-posn ag))
             #:sym 'fullcircle
             #:alpha 0.6
-            #:color col))
-  (let-values ([(or gr)
-               (partition
-                (lambda (a) (eq? 'orange (agent-color a)))
-                state)])
-    (list
-     (points-with-col or "orange")
-     (points-with-col gr "green"))))
+            #:color (cmap (agent-color ag)))))
 
 (module* main #f
   (plot-new-window? #t)
