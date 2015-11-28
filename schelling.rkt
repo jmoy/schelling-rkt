@@ -44,14 +44,13 @@
 ;; Stop and display the configuration if we reach
 ;; a configuration from which there are no moves.
 (define (main)
-  (define (go s)
+  (let loop ([s (init-state)])
     (let-values ([(m ns) (next-state s)])
       (if (zero? m)
           (plot (render-state s))
           (begin
             (displayln m)
-            (go ns)))))
-  (go (init-state)))
+            (loop ns))))))
       
 ;; Create initial state with randomly
 ;; positioned agents
